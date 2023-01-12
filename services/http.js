@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { sqi } from '../db/db.js';
+import { squirrel } from '../db/db.js';
 
 const app = express();
 
@@ -13,9 +13,31 @@ app.get("/", (req, res) => {
 
 app.get("/db/create", (req, res) => {
     console.log(req);
-    const db = sqi.create("testdb.db");
+    const db = squirrel.createDB("testdb.db");
     db.run(`CREATE TABLE IF NOT EXISTS test(rowid INTEGERY PRIMARY KEY);`);
+    db.close();
     res.send('Create DB');
+})
+
+app.get("/db/create/:dbName", (req, res) => {
+    console.log(req);
+    console.log(req.params.dbName)
+    const db = squirrel.createDB(req.params.dbName + ".db");
+    db.run(`CREATE TABLE IF NOT EXISTS test(rowid INTEGERY PRIMARY KEY);`);
+    db.close();
+    res.send(`Created DB: ${req.params.dbName}.db`);
+})
+
+app.get("/db/:dbName/createTable/:tableName", (req, res) => {
+    const db = squirrel.createTable(req.params.dbName, req.params.tableName);
+    db.close();
+    res.send(`Created table: ${req.params.tableName} in ${req.params.dbName}.db`);
+})
+
+app.get("/db/:dbName/table/:tableName/addColumn/:columnName/:columnType", (req, res) => {
+    const db = squirrel.addColumn(req.params.dbName, req.params.tableName, req.params.columnName, req.params.columnType);
+    db.close();
+    res.send(`Added column: ${req.params.columnName} to table ${req.params.tableName} in ${req.params.dbName}.db`);
 })
 
 app.post("/db/create", (req, res) => {
