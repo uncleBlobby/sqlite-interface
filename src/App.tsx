@@ -1,32 +1,33 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
+import axios from 'axios'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [dbName, setDbName] = useState('')
+
+  const createDB = () => {
+    console.log(`createDB ${dbName}`)
+    axios.post(`http://localhost:5175/db/create/${dbName}`)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  const inputListener = (event: any) => {
+    setDbName(event.target.value)
+  }
 
   return (
     <div className="App">
+      squirrel - sqlite3 nodejs interface
+
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        DB Name:<input onChange={(e) => inputListener(e)}></input><button onClick={() => {createDB()}}>Create DB</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   )
 }

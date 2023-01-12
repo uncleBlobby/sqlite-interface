@@ -1,8 +1,10 @@
 import express from 'express';
 
 import { squirrel } from '../db/db.js';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 
 const PORT = 5175;
 const ADD = '0.0.0.0';
@@ -20,6 +22,15 @@ app.get("/db/create", (req, res) => {
 })
 
 app.get("/db/create/:dbName", (req, res) => {
+    console.log(req);
+    console.log(req.params.dbName)
+    const db = squirrel.createDB(req.params.dbName + ".db");
+    db.run(`CREATE TABLE IF NOT EXISTS test(rowid INTEGERY PRIMARY KEY);`);
+    db.close();
+    res.send(`Created DB: ${req.params.dbName}.db`);
+})
+
+app.post("/db/create/:dbName", (req, res) => {
     console.log(req);
     console.log(req.params.dbName)
     const db = squirrel.createDB(req.params.dbName + ".db");
