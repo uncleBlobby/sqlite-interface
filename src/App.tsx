@@ -5,12 +5,14 @@ import axios from 'axios'
 function App() {
   const [count, setCount] = useState(0)
   const [dbName, setDbName] = useState('')
+  const [currentDbName, setCurrentDbName] = useState('')
 
   const createDB = () => {
     console.log(`createDB ${dbName}`)
     axios.post(`http://localhost:5175/db/create/${dbName}`)
       .then(res => {
         console.log(res);
+        setCurrentDbName(dbName)
       })
       .catch(err => {
         console.log(err);
@@ -24,6 +26,7 @@ function App() {
   return (
     <div className="App">
       squirrel - sqlite3 nodejs interface
+      <div>current db file:{`${currentDbName}`}</div>
 
       <div>
         DB Name:<input onChange={(e) => inputListener(e)}></input><button onClick={() => {createDB()}}>Create DB</button>
