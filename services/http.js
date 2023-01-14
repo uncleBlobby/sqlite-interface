@@ -1,5 +1,8 @@
 import express from 'express';
 
+import fs from 'fs';
+import path from 'path';
+
 import { squirrel } from '../db/db.js';
 import cors from 'cors';
 
@@ -55,6 +58,23 @@ app.post("/db/create", (req, res) => {
     console.log(req);
     res.send('Create DB');
 })
+
+/*
+app.get("/db/find", (req, res) => {
+    console.log(req);
+
+    const directoryPath = path.join(__dirname, 'db');
+    fs.readdir(directoryPath, (err, files) => {
+        if (err) {
+            return console.log('Unable to scan directory: ' + err);
+        }
+        files.forEach((file) => {
+            console.log(file);
+        });
+    });
+    res.send('Find DB');
+})
+*/
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
